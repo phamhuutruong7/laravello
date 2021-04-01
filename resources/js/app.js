@@ -1,7 +1,7 @@
 import './bootstrap';
 import Vue from 'vue';
 import Board from './Board';
-import apolloProvider from './apollo.config';
+import apolloProvider from './components/apollo.config';
 
 window.Vue = Vue;
 
