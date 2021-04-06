@@ -16,7 +16,7 @@ type Query {
 }
 
 type Mutation {
-    cardAdd(title: String!, order: Int!, list_id: ID!, owner_id: ID!): Card!
+    cardAdd(input: CardAddInput! @spread): Card!
         @create
 }
 
@@ -57,4 +57,11 @@ type Card {
     order: Int!
     list: CardList! @belongsTo
     owner: User! @belongsTo
+}
+
+input CardAddInput{
+    title: String!
+    order: Int!
+    list_id: ID!
+    owner_id: ID!
 }
