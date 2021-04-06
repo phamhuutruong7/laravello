@@ -6,6 +6,7 @@
 
 <script>
 import CardAdd from "./../graphql/CardAdd.gql";
+import BoardQuery from "./../graphql/BoardWithListsAndCards.gql";
 export default {
     methods: {
         addCard(){
@@ -15,6 +16,14 @@ export default {
                     title: 'Added through mutation',
                     listId: 1,
                     order: 1
+                },
+                update(store, { data: { cardAdd }}){
+                    const data = store.readQuery({
+                        query: BoardQuery,
+                        variables: { id: 1}
+                    });
+                    data.board.lists.find(list => (list.id = 1)).cards.push(cardAdd);
+                    store.writeQuery({ query: BoardQuery, data});
                 }
             });
         }
