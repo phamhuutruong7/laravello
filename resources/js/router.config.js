@@ -3,6 +3,8 @@ import VueRouter from 'vue-router';
 import Board from "./Board.vue";
 import Login from "./Login.vue";
 
+Vue.use(VueRouter);
+
 const routes = [
     {
         path:"/",
