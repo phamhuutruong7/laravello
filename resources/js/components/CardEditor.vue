@@ -25,9 +25,7 @@
 <script>
 
 export default {
-    props: {
-        props:["value", "label"]
-    },
+    props: ["value", "label"],
     mounted() {
         this.$refs.card.focus();
     },
