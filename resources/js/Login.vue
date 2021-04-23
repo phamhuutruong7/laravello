@@ -5,7 +5,13 @@
                 <span>Laravello</span>
             </div>
             <div class="w-full sm:shadow-xl sm:bg-white sm:py-8 sm:px-12">
-                <div class="w-full text-center text-gray-600 font-bold mb-8">Log into Laravello</div>
+                <div
+                    v-if="errors.length"
+                    class="p-2 bg-red-600 text-gray-100 rounded-sm mb-6 text-sm text-center"
+                >
+                    <div v-for="(error, index) in errors" :key="index">{{ error.message}}</div>
+                </div>
+                <div class="w-full text-center text-gray-600 font-bold mb-8">Log in to Laravello</div>
                 <form @submit.prevent="authenticate">
                     <div class="w-full mb-4">
                         <input
@@ -46,16 +52,19 @@
 
 <script>
 import Login from "./graphql/Login.gql";
+import { gqlErrors } from "./utils";
 
 export default {
     data(){
         return {
             email: null,
-            password: null
+            password: null,
+            errors: []
         };
     },
     methods: {
         async authenticate() {
+            this.errors = [];
             try {
                 await this.$apollo.mutate({
                     mutation: Login,
@@ -65,7 +74,8 @@ export default {
                     }
                 });
             } catch (err) {
-                console.log(err);
+                console.log(gqlErrors(err));
+                this.errors = gqlErrors(err);
             }
         }
     }
