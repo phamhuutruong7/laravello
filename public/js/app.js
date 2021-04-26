@@ -5671,6 +5671,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -32895,7 +32903,30 @@ var render = function() {
           ),
           _vm._v(" "),
           _c("div", { staticClass: "mr-2 w-1/3 flex justify-end" }, [
-            _vm._v(_vm._s(_vm.isLoggedIn ? "Logged in" : "Not logged in"))
+            _vm.isLoggedIn
+              ? _c("div", [
+                  _c("button", { staticClass: "header-btn" }, [
+                    _vm._v("Logout")
+                  ])
+                ])
+              : _c("div", [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "header-btn",
+                      on: {
+                        click: function($event) {
+                          return _vm.$router.push({ name: "login" })
+                        }
+                      }
+                    },
+                    [_vm._v("Sign-in")]
+                  ),
+                  _vm._v(" "),
+                  _c("button", { staticClass: "header-btn" }, [
+                    _vm._v("Register")
+                  ])
+                ])
           ])
         ]
       ),
