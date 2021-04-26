@@ -5678,6 +5678,11 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     List: _components_List__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
+  computed: {
+    isLoggedIn: function isLoggedIn() {
+      return this.$store.state.isLoggedIn;
+    }
+  },
   apollo: {
     board: {
       query: _graphql_BoardWithListsAndCards_gql__WEBPACK_IMPORTED_MODULE_1___default.a,
@@ -5834,21 +5839,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 });
 
               case 4:
-                _context.next = 10;
+                _this.$store.commit('setLoggedIn', true);
+
+                _this.$router.push({
+                  name: "board"
+                });
+
+                _context.next = 11;
                 break;
 
-              case 6:
-                _context.prev = 6;
+              case 8:
+                _context.prev = 8;
                 _context.t0 = _context["catch"](1);
-                console.log(Object(_utils__WEBPACK_IMPORTED_MODULE_2__["gqlErrors"])(_context.t0));
                 _this.errors = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["gqlErrors"])(_context.t0);
 
-              case 10:
+              case 11:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[1, 6]]);
+        }, _callee, null, [[1, 8]]);
       }))();
     }
   }
@@ -32867,7 +32877,28 @@ var render = function() {
     "div",
     { staticClass: "h-full flex flex-col items-stretch bg-purple-500" },
     [
-      _vm._m(0),
+      _c(
+        "div",
+        {
+          staticClass:
+            "header text-white flex justify-between items-center mb-2 bg-purple-600"
+        },
+        [
+          _c("div", { staticClass: "ml-2 w-1/3" }, [_vm._v("x")]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "text-lg opacity-50 cursor-pointer hover:opacity-75"
+            },
+            [_vm._v("Laravello")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "mr-2 w-1/3 flex justify-end" }, [
+            _vm._v(_vm._s(_vm.isLoggedIn ? "Logged in" : "Not logged in"))
+          ])
+        ]
+      ),
       _vm._v(" "),
       _c("div", { staticClass: "h-full flex flex-1 flex-col items-stretch" }, [
         _c("div", { staticClass: "mx-4 mb-2 text-white font-bold text-lg" }, [
@@ -32904,31 +32935,7 @@ var render = function() {
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass:
-          "header text-white flex justify-between items-center mb-2 bg-purple-600"
-      },
-      [
-        _c("div", { staticClass: "ml-2 w-1/3" }, [_vm._v("x")]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "text-lg opacity-50 cursor-pointer hover:opacity-75" },
-          [_vm._v("Laravello")]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "mr-2 w-1/3 flex justify-end" }, [_vm._v("x")])
-      ]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -52242,8 +52249,14 @@ __webpack_require__.r(__webpack_exports__);
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
 var store = {
-  state: {},
-  mutations: {},
+  state: {
+    isLoggedIn: false
+  },
+  mutations: {
+    setLoggedIn: function setLoggedIn(state, payload) {
+      state.isLoggedIn = Boolean(payload);
+    }
+  },
   actions: {}
 };
 /* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store(store));
