@@ -12,7 +12,13 @@ const store = {
             state.isLoggedIn = Boolean(payload);
         }
     },
-    actions: {}
+    actions: {
+        async setLoggedIn({ commit }, payload) {
+            const isLoggedIn = Boolean(payload);
+            localStorage.setItem("isLoggedIn", isLoggedIn);         //localStorage in inside Application tab of F12. localStorage always store things as text.
+            commit("setLoggedIn", isLoggedIn);
+        }
+    }
 };
 
 export default new Vuex.Store(store);
