@@ -51092,6 +51092,7 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
   store: _vuex_config__WEBPACK_IMPORTED_MODULE_5__["default"],
   beforeCreate: function beforeCreate() {
     _vuex_config__WEBPACK_IMPORTED_MODULE_5__["default"].dispatch('setLoggedIn', localStorage.getItem('isLoggedIn') === 'true');
+    _vuex_config__WEBPACK_IMPORTED_MODULE_5__["default"].dispatch('fetchCurrentUser');
   }
 });
 
@@ -52041,6 +52042,139 @@ var EVENT_CARD_UPDATED = 'EVENT_CARD_UPDATED';
 
 /***/ }),
 
+/***/ "./resources/js/graphql/Me.gql":
+/*!*************************************!*\
+  !*** ./resources/js/graphql/Me.gql ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+    var doc = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Me"},"variableDefinitions":[],"directives":[],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"me"},"arguments":[],"directives":[],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"},"arguments":[],"directives":[]},{"kind":"Field","name":{"kind":"Name","value":"name"},"arguments":[],"directives":[]},{"kind":"Field","name":{"kind":"Name","value":"email"},"arguments":[],"directives":[]}]}}]}}],"loc":{"start":0,"end":66}};
+    doc.loc.source = {"body":"query Me {\n    me {\n        id\n        name\n        email\n    }\n}\n","name":"GraphQL request","locationOffset":{"line":1,"column":1}};
+  
+
+    var names = {};
+    function unique(defs) {
+      return defs.filter(
+        function(def) {
+          if (def.kind !== 'FragmentDefinition') return true;
+          var name = def.name.value
+          if (names[name]) {
+            return false;
+          } else {
+            names[name] = true;
+            return true;
+          }
+        }
+      )
+    }
+  
+
+    // Collect any fragment/type references from a node, adding them to the refs Set
+    function collectFragmentReferences(node, refs) {
+      if (node.kind === "FragmentSpread") {
+        refs.add(node.name.value);
+      } else if (node.kind === "VariableDefinition") {
+        var type = node.type;
+        if (type.kind === "NamedType") {
+          refs.add(type.name.value);
+        }
+      }
+
+      if (node.selectionSet) {
+        node.selectionSet.selections.forEach(function(selection) {
+          collectFragmentReferences(selection, refs);
+        });
+      }
+
+      if (node.variableDefinitions) {
+        node.variableDefinitions.forEach(function(def) {
+          collectFragmentReferences(def, refs);
+        });
+      }
+
+      if (node.definitions) {
+        node.definitions.forEach(function(def) {
+          collectFragmentReferences(def, refs);
+        });
+      }
+    }
+
+    var definitionRefs = {};
+    (function extractReferences() {
+      doc.definitions.forEach(function(def) {
+        if (def.name) {
+          var refs = new Set();
+          collectFragmentReferences(def, refs);
+          definitionRefs[def.name.value] = refs;
+        }
+      });
+    })();
+
+    function findOperation(doc, name) {
+      for (var i = 0; i < doc.definitions.length; i++) {
+        var element = doc.definitions[i];
+        if (element.name && element.name.value == name) {
+          return element;
+        }
+      }
+    }
+
+    function oneQuery(doc, operationName) {
+      // Copy the DocumentNode, but clear out the definitions
+      var newDoc = {
+        kind: doc.kind,
+        definitions: [findOperation(doc, operationName)]
+      };
+      if (doc.hasOwnProperty("loc")) {
+        newDoc.loc = doc.loc;
+      }
+
+      // Now, for the operation we're running, find any fragments referenced by
+      // it or the fragments it references
+      var opRefs = definitionRefs[operationName] || new Set();
+      var allRefs = new Set();
+      var newRefs = new Set();
+
+      // IE 11 doesn't support "new Set(iterable)", so we add the members of opRefs to newRefs one by one
+      opRefs.forEach(function(refName) {
+        newRefs.add(refName);
+      });
+
+      while (newRefs.size > 0) {
+        var prevRefs = newRefs;
+        newRefs = new Set();
+
+        prevRefs.forEach(function(refName) {
+          if (!allRefs.has(refName)) {
+            allRefs.add(refName);
+            var childRefs = definitionRefs[refName] || new Set();
+            childRefs.forEach(function(childRef) {
+              newRefs.add(childRef);
+            });
+          }
+        });
+      }
+
+      allRefs.forEach(function(refName) {
+        var op = findOperation(doc, refName);
+        if (op) {
+          newDoc.definitions.push(op);
+        }
+      });
+
+      return newDoc;
+    }
+
+    module.exports = doc;
+    
+        module.exports["Me"] = oneQuery(doc, "Me");
+        
+
+
+/***/ }),
+
 /***/ "./resources/js/graphql/Register.gql":
 /*!*******************************************!*\
   !*** ./resources/js/graphql/Register.gql ***!
@@ -52283,6 +52417,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _components_apollo_config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/apollo.config */ "./resources/js/components/apollo.config.js");
+/* harmony import */ var _graphql_Me_gql__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./graphql/Me.gql */ "./resources/js/graphql/Me.gql");
+/* harmony import */ var _graphql_Me_gql__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_graphql_Me_gql__WEBPACK_IMPORTED_MODULE_4__);
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -52291,14 +52428,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 
+
+
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_2__["default"]);
 var store = {
   state: {
-    isLoggedIn: false
+    isLoggedIn: false,
+    user: {
+      id: null,
+      name: null,
+      email: null
+    }
   },
   mutations: {
     setLoggedIn: function setLoggedIn(state, payload) {
       state.isLoggedIn = Boolean(payload);
+    },
+    setUser: function setUser(state, payload) {
+      state.user = payload;
     }
   },
   actions: {
@@ -52321,6 +52468,46 @@ var store = {
             }
           }
         }, _callee);
+      }))();
+    },
+    fetchCurrentUser: function fetchCurrentUser(_ref2) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var _result$data;
+
+        var commit, dispatch, result, user;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                commit = _ref2.commit, dispatch = _ref2.dispatch;
+                _context2.next = 3;
+                return _components_apollo_config__WEBPACK_IMPORTED_MODULE_3__["default"].defaultClient.query({
+                  query: _graphql_Me_gql__WEBPACK_IMPORTED_MODULE_4___default.a,
+                  fetchPolicy: "no-cache"
+                });
+
+              case 3:
+                result = _context2.sent;
+                user = (_result$data = result.data) === null || _result$data === void 0 ? void 0 : _result$data.me;
+
+                if (user) {
+                  commit("setUser", user);
+                  dispatch("setLoggedIn", true);
+                } else {
+                  commit("setUser", {
+                    id: null,
+                    name: null,
+                    email: null
+                  });
+                  dispatch("setLoggedIn", false);
+                }
+
+              case 6:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
       }))();
     }
   }
